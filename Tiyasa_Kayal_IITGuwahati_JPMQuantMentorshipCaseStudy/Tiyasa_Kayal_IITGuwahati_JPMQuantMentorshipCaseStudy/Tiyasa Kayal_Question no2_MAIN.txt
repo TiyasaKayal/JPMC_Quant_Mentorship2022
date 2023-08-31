@@ -1,0 +1,102 @@
+import java.util.Scanner;
+public class jp_final
+{
+    Scanner sc=new Scanner (System.in);    
+    void main()
+    {
+        int l=0;
+        int k=-1;
+        System.out.println("enter string");
+        String e=sc.nextLine();
+        e=e.trim();
+        for(int i=0;i<e.length();i++)
+        {
+            char cha=e.charAt(i);
+            if(cha==' ')
+            l++;                              // counting the number or words in the string 
+        }
+        l=l+1;
+        String[] s=new String[l];
+        e=" "+e;
+        for(int i=0;i<e.length();i++)
+        {  
+            char ch=e.charAt(i);
+               if(ch!=' ')
+            s[k]=s[k]+ch;
+            else
+            { i++;
+                k++;
+                if(s[k]==null)
+                s[k]=String.valueOf(e.charAt(i));        // storing the words in a string array
+            
+           }
+    }
+        String[] n=new String[5];
+        n[0]="Cojelo";
+        n[1]="Con";
+        n[2]="Take";
+        n[3]="It";
+        n[4]="Easy";
+        int[] input=new int[l];
+        int c=0;
+        for(int j=0;j<l;j++)
+        {
+            for(int i=0;i<5;i++)
+            {
+                if(s[j].equals(n[i]))        // checking whether the string array contains any or the words from the given set.
+                {
+                input[c]=i;                  // preparing an integer array  with the position of the matching words. 
+                c++;
+            }
+            }
+            }
+         double[][] Pt={{0.3,0.6},{0.7,0.4}}; //transition probability matrix
+         double[] Ps={0.6,0.4};               // sentence start probability matrix
+         double[][] Pe={{0.1,0.3},{0.2,0.3},{0.3,0.15},{0.2,0.15},{0.2,0.1}}; // emission probability  matrix
+         double[][] dmP=new double[2][2];      
+         double[] stng=new double[l];         //stng- is most likely language transition string
+         int a=input[0];
+         double[] p=new double[2];            
+          p[0]=Ps[0]*Pe[a][0];                 //using the prior(sentence start) probability and the emission probability,probability of english is calculated    
+          p[1]=Ps[1]*Pe[a][1];                //using the prior(sentence start) probability and the emission probability,probability of spanish is calculat
+          double[] alpha=new double[2]; 
+          alpha[0]=p[0];
+          alpha[1]=p[1];
+          if(p[0]>p[1])
+          stng[0]=0;
+          if(p[1]>p[0])
+          stng[0]=1;   
+          //Here,we use Viterbi Algorithm to calculate the most likely language transition string 
+          //and Forward Algoritm to calculate the probability of the language string
+          for(int i=1;i<l;i++)
+            {
+                a=input[i];
+                dmP[0][0]=p[0]*Pe[a][0]*Pt[0][0];
+                dmP[0][1]=p[1]*Pe[a][0]*Pt[0][1];
+                dmP[1][0]=p[0]*Pe[a][1]*Pt[1][0];
+                dmP[1][1]=p[1]*Pe[a][1]*Pt[1][1];
+                p[0]=Math.max(dmP[0][0],dmP[0][1]);         // storing best probability for English
+                p[1]=Math.max(dmP[1][0],dmP[1][1]);         // storing best probability for Spanish
+                double  dummy=alpha[0]*Pe[a][0]*Pt[0][0]+alpha[1]*Pe[a][0]*Pt[0][1];
+                alpha[1]=alpha[0]*Pe[a][1]*Pt[1][0]+alpha[1]*Pe[a][1]*Pt[1][1];
+                alpha[0]=dummy;
+                if(p[0]>p[1])
+                 stng[i]=0;
+                if(p[1]>p[0])
+                stng[i]=1;   
+               }
+             double finalprob=alpha[0]+alpha[1]; // calculating the probability of language string according to Forward Algorithm
+          System.out.print("\"") ; 
+             for ( int i=0;i<l;i++)
+            {
+              if (stng[i]==0)
+        System.out.print("E ");
+        else
+         System.out.print("S ");
+    }
+    System.out.print("\"") ; 
+   System.out.println( ":"+ String.format("%.5f",finalprob));
+}
+}
+    
+    

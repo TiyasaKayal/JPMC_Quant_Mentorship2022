@@ -1,0 +1,41 @@
+clc; 
+
+clear all; 
+
+x=input ('enter values in percentage:  '); 
+
+p=x/100; 
+
+r=1; 
+
+n=1; 
+
+AsumB=((4*r*r)-(pi*r*r))/4; 
+
+AreaRatio=0.5; 
+
+if p==0.5 
+
+    fprintf('The minimum value of n for which the AreaRatio is greater than or equal to %.2f percentage is %d \n',(p*100),1) 
+
+else 
+
+while AreaRatio < p 
+
+    upperlim=(r*n*(n+1-sqrt(2*n)))/((n*n)+1);             
+
+    fun= @(x) (r-sqrt((r).^2 -((x-r).^2))-(x/n));                                       %Area Function for A
+
+    A = integral(fun,0,upperlim);                                                       %calculating the integral for area of A
+
+    AreaRatio=(A/AsumB);                                         
+
+    n=n+1; 
+
+end 
+
+answer=n-1; 
+
+fprintf('The minimum value of n for which the AreaRatio is greater than or equal to %.2f percentage is %d \n',(p*100),n-1) 
+
+end 
